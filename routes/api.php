@@ -38,7 +38,7 @@ Route::get('/clear-cache', function () {
     return 'Cache is cleared';
 });
 
-Route::post('/Cliniclogin', [ClinicApiController::class, 'Cliniclogin']);
+Route::post('/Login', [ClinicApiController::class, 'Login']);
 Route::post('/Treatment/Add', [TreatmentApiController::class, 'AddTreatment'])->name('Treatmentadd');
 Route::post('/Treatment/list', [TreatmentApiController::class, 'Treatmentlist'])->name('Treatmentlist');
 Route::post('/Treatment/Update', [TreatmentApiController::class, 'TreatmentUpdate'])->name('TreatmentUpdate');
@@ -81,10 +81,25 @@ Route::post('/Patient/list', [PatientApiController::class, 'Patientlist'])->name
 Route::post('/Patient/Update', [PatientApiController::class, 'PatientUpdate'])->name('PatientUpdate');
 Route::post('/Patient/delete', [PatientApiController::class, 'Patientdelete'])->name('Patientdelete');
 
-Route::post('/Patient/Treatment/Add', [PatientTreatmentApiController::class, 'AddPatientTreatment'])->name('AddPatientTreatment');
-Route::post('/Patient/Treatment/list', [PatientTreatmentApiController::class, 'PatientTreatmentlist'])->name('PatientTreatmentlist');
+// Patient-Treatment
+Route::post('/Patient/Treatment/list', [PatientApiController::class, 'PatientTreatmentlist']);
+Route::post('/Patient/Treatment/Add', [PatientApiController::class, 'AddPatientTreatment']);
+Route::post('/Patient/Treatment/delete', [PatientApiController::class, 'PatientTreatmentdelete']);
+
+// Patient-Prescription
+Route::post('/patient/prescription/list', [PatientApiController::class, 'patient_prescription_list']);
+Route::post('/patient/prescription/Add', [PatientApiController::class, 'patient_prescription_add']);
+Route::post('/patient/prescription/delete', [PatientApiController::class, 'patient_prescription_delete']);
+
+// Upload Document
+Route::post('/patient/document/add', [PatientApiController::class, 'patient_add_document']);
+Route::post('/patient/document/list', [PatientApiController::class, 'patient_document_list']);
+Route::post('/patient/document/delete', [PatientApiController::class, 'patient_document_delete']);
+
+//Route::post('/Patient/Treatment/Add', [PatientTreatmentApiController::class, 'AddPatientTreatment'])->name('AddPatientTreatment');
+//Route::post('/Patient/Treatment/list', [PatientTreatmentApiController::class, 'PatientTreatmentlist'])->name('PatientTreatmentlist');
 Route::post('/Patient/Treatment/Update', [PatientTreatmentApiController::class, 'PatientTreatmentUpdate'])->name('PatientTreatmentUpdate');
-Route::post('/Patient/Treatment/delete', [PatientTreatmentApiController::class, 'PatientTreatmentdelete'])->name('PatientTreatmentdelete');
+//Route::post('/Patient/Treatment/delete', [PatientTreatmentApiController::class, 'PatientTreatmentdelete'])->name('PatientTreatmentdelete');
 
 Route::post('/Document/Add', [DocumentApiController::class, 'AddDocument'])->name('AddDocument');
 Route::post('/Document/list', [DocumentApiController::class, 'Documentlist'])->name('Documentlist');
