@@ -34,8 +34,9 @@ class PrescriptionController extends Controller
      */
     public function create($patient_id)
     {
+       
         //$patient = Patient::findOrFail($patient_id);
-        $patient = Patient::where(['patient_id' => $patient_id, 'clinic_id' => auth()->user()->clinic_id]);
+        $patient = Patient::where(['id' => $patient_id, 'clinic_id' => auth()->user()->clinic_id])->first();
         $medicines = Medicine::where('clinic_id', auth()->user()->clinic_id)->get();
         $dosages = Dosage::where('clinic_id', auth()->user()->clinic_id)->get();
 

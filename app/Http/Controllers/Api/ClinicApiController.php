@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Pincode;
 use GuzzleHttp\Client;
 use App\Models\Clinic;
+use App\Models\User;
+
 use App\Models\ApiUser;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -27,27 +29,30 @@ class ClinicApiController extends Controller
 {
 
 
-    public function Cliniclogin(Request $request)
+    public function Login(Request $request)
     {
         try {
             $request->validate([
-                'mobile_no' => 'required|digits:10',
-                'password' => 'required',
+                'mobile' => 'required|digits:10',
+                'password' => 'required'
             ]);
 
-            $mobile = $request->mobile_no;
+            $mobile = $request->mobile;
             $password = $request->password;
 
-            // Then check in User table
-            $user = ApiUser::where('mobile_number', $mobile)->first();
-            if ($user && Hash::check($password, $user->password)) {
-                $token = JWTAuth::fromUser($user);
+            /** ------------------------------------
+             * 2. Check Clinic Table
+             * ------------------------------------ */
+            $clinic = Clinic::where('mobile_no', $mobile)->first();
+
+            if ($clinic && Hash::check($password, $clinic->password)) {
+                $token = JWTAuth::fromUser($clinic);
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'User login successful',
-                    'user_type' => 'user',
-                    'user' => $user,
+                    'flag' => 'clinic',
+                    'message' => 'Clinic login successful',
+                    'data' => $clinic,
                     'authorisation' => [
                         'token' => $token,
                         'type' => 'bearer',
@@ -55,9 +60,32 @@ class ClinicApiController extends Controller
                 ]);
             }
 
+            /** ------------------------------------
+             * 1. Check User Table
+             * ------------------------------------ */
+            $user = User::where('mobile_number', $mobile)->first();
+
+            if ($user && Hash::check($password, $user->password)) {
+                $token = JWTAuth::fromUser($user);
+
+                return response()->json([
+                    'success' => true,
+                    'flag' => 'user',
+                    'message' => 'User login successful',
+                    'data' => $user,
+                    'authorisation' => [
+                        'token' => $token,
+                        'type' => 'bearer',
+                    ],
+                ]);
+            }
+
+
+
+            // No match found
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid credentials',
+                'message' => 'Invalid mobile or password',
             ], 401);
         } catch (ValidationException $e) {
             return response()->json([
@@ -71,6 +99,7 @@ class ClinicApiController extends Controller
             ], 500);
         }
     }
+
 
 
     public function change_password(Request $request)
