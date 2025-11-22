@@ -126,8 +126,6 @@
                             <input type="text" class="form-control" id="patient_search"
                                 placeholder="Search patient name">
                             <input type="hidden" id="patient_id" name="patient_id">
-
-
                         </div>
 
 
@@ -144,10 +142,10 @@
                             <input type="text" class="form-control" id="contact_no" name="contact_no" maxlength="10"
                                 readonly>
                         </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" id="email" name="email" readonly>
-                        </div>
+                        <!--<div class="form-group">-->
+                        <!--    <label>Email</label>-->
+                        <!--    <input type="email" class="form-control" id="email" name="email" readonly>-->
+                        <!--</div>-->
                         <div class="form-group">
                             <label>Duration</label>
                             <input type="text" class="form-control" id="duration" name="duration">

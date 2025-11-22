@@ -82,8 +82,9 @@ Route::post('/Loginstore', [ClinicController::class, 'Loginstore'])->name('Login
 
 Route::get('/ClinicUserLogin', [ClinicController::class, 'ClinicUserLogin'])->name('ClinicUserLogin');
 
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/admin/get-patient-details/{id}', [App\Http\Controllers\PatientController::class, 'getPatientDetails'])
+    ->name('admin.patient.details');
 
 // Profile Routes
 Route::prefix('profile')->name('profile.')->middleware('auth')->group(function () {
