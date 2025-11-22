@@ -53,7 +53,7 @@
 
                                                 <input id="mobile_no" type="text"
                                                     class="form-control  @error('mobile_no') is-invalid @enderror"
-                                                    name="mobile_no" value="{{ old('mobile_no') }}" required
+                                                    name="mobile_no" maxlength="10" value="{{ old('mobile_no') }}" required
                                                     autocomplete="mobile_no" autofocus placeholder="Enter Mobile No.">
 
                                                 @error('mobile_no')

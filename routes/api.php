@@ -90,6 +90,8 @@ Route::post('/Patient/Treatment/delete', [PatientApiController::class, 'PatientT
 Route::post('/patient/prescription/list', [PatientApiController::class, 'patient_prescription_list']);
 Route::post('/patient/prescription/Add', [PatientApiController::class, 'patient_prescription_add']);
 Route::post('/patient/prescription/delete', [PatientApiController::class, 'patient_prescription_delete']);
+Route::post('/patient/prescription_detail/delete', [PatientApiController::class, 'patient_prescriptiondetail_delete']);
+Route::post('/patient/Todayprescriptionlist', [PatientApiController::class, 'today_patient_prescription']);
 
 // Upload Document
 Route::post('/patient/document/add', [PatientApiController::class, 'patient_add_document']);

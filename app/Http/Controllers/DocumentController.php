@@ -49,7 +49,7 @@ class DocumentController extends Controller
             $root = $_SERVER['DOCUMENT_ROOT'];
             $image = $request->file('document');
             $img = time() . '.' . $image->getClientOriginalExtension();
-            $destinationpath = $root . '/dental_clinic_new/D&D_DENTAL_CLINIC/documents/';
+            $destinationpath = $root . '/D&D_DENTAL_CLINIC/documents/';
             if (!file_exists($destinationpath)) {
                 mkdir($destinationpath, 0755, true);
             }
@@ -95,7 +95,7 @@ class DocumentController extends Controller
         $date = $PatientTreatment->created_at->format('Y/m/d');
         if ($request->hasFile('document')) {
             $root = $_SERVER['DOCUMENT_ROOT'];
-            $destinationpath = $root . '/dental_clinic_new/patient_treatments/' . $date . '/' . $PatientTreatment->id;
+            $destinationpath = $root . '/patient_treatments/' . $date . '/' . $PatientTreatment->id;
             if (!file_exists($destinationpath)) {
                 mkdir($destinationpath, 0755, true);
             }
@@ -135,7 +135,7 @@ class DocumentController extends Controller
         // 1. Delete single document (from Document model)
         $document = Document::find($document_id);
         if ($document) {
-            $singleFilePath = $root . '/dental_clinic_new/D&D_DENTAL_CLINIC/documents/' . $document->document;
+            $singleFilePath = $root . '/D&D_DENTAL_CLINIC/documents/' . $document->document;
             if (file_exists($singleFilePath)) {
                 unlink($singleFilePath);
             }

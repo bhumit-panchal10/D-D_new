@@ -15,6 +15,21 @@ use Carbon\Carbon;
 class PatientController extends Controller
 {
     // Display patients list
+    
+    public function getPatientDetails($id)
+    {
+        $patient = Patient::find($id);
+
+        if (!$patient) {
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
+
+        return response()->json([
+            'contact_no' => $patient->mobile1,
+            'email'      => $patient->email,
+        ]);
+    }
+
 
     public function autocomplete(Request $request)
     {

@@ -54,7 +54,7 @@
                                         <td>{{ $patient->name }}</td>
                                         <td>{{ $patient->mobile1 }}</td>
                                         <td>{{ $patient->mobile2 }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($patient->dob ?? '-')) }}</td>
+                                        <td>{{ optional($patient->dob ? \Carbon\Carbon::parse($patient->dob) : null)->format('d-m-Y') }}</td>
                                         <td>{{ $patient->reference_by ?? '-' }}</td>
                                         {{-- <td>{{ $patient->is_government_employee == 'yes' ? 'Yes' : 'No' }}</td> --}}
                                     </tr>
