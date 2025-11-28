@@ -126,7 +126,7 @@ class ClinicController extends Controller
                 $image = $request->file('logo');
 
                 $img = time() . '_' . date('dmYHis') . '.' . $image->getClientOriginalExtension();
-                $destinationpath = $root . '/dental_clinic_new/upload/logo/';
+                $destinationpath = $root . '/upload/logo/';
 
                 // Create the directory if it doesn't exist
                 if (!file_exists($destinationpath)) {
@@ -245,7 +245,7 @@ class ClinicController extends Controller
 
                 // Generate a unique file name
                 $img = time() . '_' . date('dmYHis') . '.' . $image->getClientOriginalExtension();
-                $destinationpath = $root . '/dental_clinic_new/upload/logo/';
+                $destinationpath = $root . '/upload/logo/';
 
 
                 // Create directory if it doesn't exist

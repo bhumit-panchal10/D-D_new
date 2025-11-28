@@ -39,7 +39,7 @@ class PatientNotesApiController extends Controller
                 "patient_id",
                 "notes",
                 "clinic_id",
-            )->orderBy('id', 'asc')->where('clinic_id', $request->clinic_id)->get();
+            )->orderBy('id', 'asc')->where(['clinic_id' => $request->clinic_id,'patient_id' => $request->patient_id])->get();
             return response()->json([
                 'success' => true,
                 'message' => "successfully fetched PatientNotelist...",

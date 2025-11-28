@@ -68,7 +68,7 @@ class PatientApiController extends Controller
 
         try {
             // Validate the incoming request
-
+             
             $request->validate([
                 'name' => 'required',
                 'mobile1' => [
@@ -97,7 +97,7 @@ class PatientApiController extends Controller
                 //'mobile2.unique' => 'This Mobile 2  Number already exists for this clinic.',
 
             ]);
-
+          
             Patient::create([
                 'name' => $request->name,
                 'mobile1' => $request->mobile1,
@@ -208,8 +208,8 @@ class PatientApiController extends Controller
             ], 500);
         }
     }
-
-    // tab view start
+    
+     // tab view start
 
     //Patient Treatment
     public function PatientTreatmentlist(Request $request)
@@ -311,7 +311,7 @@ class PatientApiController extends Controller
                 "id" => 'required'
             ]);
             $treatment = PatientTreatment::findOrFail($request->id);
-
+          
             if ($treatment) {
                 // Delete the deal option
                 $treatment->delete();
@@ -399,6 +399,76 @@ class PatientApiController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
+    
+    //Today prescription list
+    public function today_patient_prescription(Request $request)
+    {
+    try {
+        // dd($request);  // <-- If you need debugging, keep only one bracket
+
+        $request->validate([
+            'patient_id' => 'required|numeric',
+            'clinic_id'  => 'required|numeric',
+        ]);
+
+        $today = \Carbon\Carbon::today()->toDateString(); // YYYY-MM-DD
+
+        $listOfprescription = Prescription::select(
+                'prescriptions.id',
+                'prescription_details.id as prescription_details_id',
+                'prescriptions.date',
+                'prescription_details.medicine_id',
+                'prescription_details.dosage_id',
+                'prescription_details.comments',
+                'prescription_details.duration',
+                'medicines.medicine_name',
+                'dosages.dosage'
+            )
+            ->where([
+                'prescriptions.patient_id' => $request->patient_id,
+                'prescriptions.clinic_id' => $request->clinic_id
+            ])
+            ->whereDate('prescriptions.date', $today)
+            ->join('prescription_details', 'prescription_details.prescription_id', '=', 'prescriptions.id')
+            ->join('medicines', 'medicines.id', '=', 'prescription_details.medicine_id')
+            ->join('dosages', 'dosages.id', '=', 'prescription_details.dosage_id')
+            ->orderBy('prescriptions.date', 'desc')
+            ->get();
+
+        $groupedData = $listOfprescription->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item->date)->toDateString();
+        });
+
+        $formattedData = $groupedData->map(function ($items, $key) {
+            return [
+                'date' => \Carbon\Carbon::parse($key)->format('d-m-Y'),
+                'treatments' => $items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'prescription_details_id' => $item->prescription_details_id,
+                        'date' => \Carbon\Carbon::parse($item->date)->format('d-m-Y'),
+                        'medicine_id' => $item->medicine_id,
+                        'medicine_name' => $item->medicine_name,
+                        'dosage_id' => $item->dosage_id,
+                        'dosage' => $item->dosage,
+                        'comments' => $item->comments,
+                        'duration' => $item->duration,
+                    ];
+                }),
+            ];
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Today’s prescription fetched successfully.',
+            'data' => $formattedData
+        ]);
+
+    } catch (\Throwable $th) {
+        return response()->json(['error' => $th->getMessage()], 500);
+    }
+}
+
 
     public function patient_prescription_add(Request $request)
     {
@@ -525,6 +595,7 @@ class PatientApiController extends Controller
             $request->validate([
                 "id" => 'required|exists:prescriptions,id'
             ]);
+         
             $prescription = Prescription::findOrFail($request->id);
             PrescriptionDetail::where('prescription_id', $prescription->id)->delete();
             $prescription->delete();
@@ -532,6 +603,26 @@ class PatientApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Patient Prescription Deleted Successfully',
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+    
+    public function patient_prescriptiondetail_delete(Request $request)
+    {
+        try {
+            $request->validate([
+                "id" => 'required'
+            ]);
+         
+            PrescriptionDetail::where('id', $request->id)->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Prescription Detail Deleted Successfully',
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
@@ -675,13 +766,13 @@ class PatientApiController extends Controller
     public function patient_document_list(Request $request)
     {
         try {
-
+          
 
             $request->validate([
                 'patient_id' => 'required|numeric',
                 'clinic_id' => 'required|numeric',
             ]);
-
+            
 
             $documents = Document::where([
                 'patient_id' => $request->patient_id,
@@ -703,7 +794,7 @@ class PatientApiController extends Controller
                             : null,
                     ];
                 });
-
+           
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully fetched patient documents.',
@@ -797,4 +888,6 @@ class PatientApiController extends Controller
             ], 500);
         }
     }
+    
+    
 }

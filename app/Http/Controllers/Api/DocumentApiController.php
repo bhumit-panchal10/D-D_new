@@ -30,10 +30,11 @@ class DocumentApiController extends Controller
     {
         try {
             $request->validate([
-                'clinic_id' => 'required|numeric'
+                'clinic_id' => 'required|numeric',
+                'patient_treatment_id' => 'required|numeric'
             ]);
 
-            $listOfDocument = Document::with('treatment')->where('clinic_id', $request->clinic_id)->get();
+            $listOfDocument = Document::with('treatment')->where(['clinic_id' => $request->clinic_id,'patient_treatment_id' => $request->patient_treatment_id])->get();
             $data = [];
             foreach ($listOfDocument as $doc) {
                 $data[] = [
@@ -79,12 +80,13 @@ class DocumentApiController extends Controller
 
 
             ], $messages);
+          
             $img = "";
             if ($request->hasFile('document')) {
                 $root = $_SERVER['DOCUMENT_ROOT'];
                 $image = $request->file('document');
                 $img = time() . '_' . date('dmYHis') . '.' . $image->getClientOriginalExtension();
-                $destinationpath = $root . '/dental_clinic_new/D&D_DENTAL_CLINIC/documents/';
+                $destinationpath = $root . '/D&D_DENTAL_CLINIC/documents/';
                 if (!file_exists($destinationpath)) {
                     mkdir($destinationpath, 0755, true);
                 }
