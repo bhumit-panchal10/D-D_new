@@ -32,10 +32,11 @@ class LabWorkApiController extends Controller
     {
         try {
             $request->validate([
-                'clinic_id' => 'required|numeric'
+                'clinic_id' => 'required|numeric',
+                'patient_id' => 'required|numeric',
             ]);
 
-            $listOflabwork = Labwork::with('treatment', 'lab')->where('clinic_id', $request->clinic_id)->get();
+            $listOflabwork = Labwork::with('treatment', 'lab')->where(['clinic_id' => $request->clinic_id,'patient_id' => $request->patient_id])->get();
             $data = [];
             foreach ($listOflabwork as $doc) {
                 $data[] = [

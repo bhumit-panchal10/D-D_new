@@ -71,7 +71,7 @@ Route::get('/run-scheduled-appointment', function () {
 });
 
 // login
-Route::get('/', function () {
+Route::get('/login', function () {
     return redirect()->route('login');
 });
 
